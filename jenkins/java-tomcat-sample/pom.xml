@@ -17,13 +17,15 @@
   </dependencies>
   <build>
     <finalName>java-tomcat-maven-example</finalName>
-    <plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-war-plugin</artifactId>
-    <version>3.6.3</version>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.6.3</version>
         <executions>
           <execution>
             <phase>package</phase>
+            <goals><goal>copy</goal></goals>
             <configuration>
               <artifactItems>
                 <artifactItem>
