@@ -19,6 +19,12 @@ pipeline {
         original_pwd=$(pwd -P)
         cd jenkins/java-tomcat-sample
         docker build -t localtomcatimg:$BUILD_NUMBER . -f Dockerfile
+        IMAGE_NAME_PREFIX="karnarajbanshi/dockerrepo"
+		VER_DHUB=v1
+          withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+            sh "docker login -u $USERNAME -p $PASSWORD"
+		sh "docker tag $APP_NAME:$APP_VER ${IMAGE_NAME_PREFIX}:$VER_DHUB"
+                sh "docker push ${IMAGE_NAME_PREFIX}:$VER_DHUB"
         cd $original_pwd
         sh '''
 	}
@@ -40,8 +46,10 @@ pipeline {
         }
 	echo "We are deploying the app in stagging env"
     sh '''
+    VER_DHUB=v1
     docker container stop tomcatstaginginstance || true
     docker container rm tomcatstaginginstance || true
+    sh "docker pull karnarajbanshi/docker-practice:$$VER_DHUB"  // Replace with your Docker Hub image name
     docker container run -itd --name tomcatstaginginstance -p 8084:8080 localtomcatimg:$BUILD_NUMBER
     sh '''
 	}
