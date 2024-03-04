@@ -11,40 +11,43 @@ pipeline {
             archiveArtifacts artifacts: '**/*.war', followSymlinks: false
         }
       }
-     }
+    }
     stage('CreateTomcatImage') {
       steps {
-        echo "Bulding docker image"
+        echo "Building docker image"
         sh '''
         original_pwd=$(pwd -P)
         cd jenkins/java-tomcat-sample
         docker build -t localtomcatimg:$BUILD_NUMBER . -f Dockerfile
+        docker push localtomcatimg:$BUILD_NUMBER # Push the built image to a repository
         cd $original_pwd
-        sh '''
-	}
-	}
-    stage('Deploy in QA instance'){
+        '''
+      }
+    }
+    stage('Deploy in QA instance') {
       steps {
-	echo "We are deploying the app"
-    sh '''
-    docker container stop tomcatlocalinstance || true
-    docker container rm tomcatlocalinstance  || true
-    docker container run -itd --name tomcatlocalinstance -p 8083:8080 localtomcatimg:$BUILD_NUMBER
-    sh '''
-	}
-	}
-    stage('Deploy in Stagging instance'){
+        echo "We are deploying the app"
+        sh '''
+        docker container stop tomcatlocalinstance || true
+        docker container rm tomcatlocalinstance  || true
+        docker pull localtomcatimg:$BUILD_NUMBER # Pull the image from the repository
+        docker container run -itd --name tomcatlocalinstance -p 8083:8080 localtomcatimg:$BUILD_NUMBER
+        '''
+      }
+    }
+    stage('Deploy in Staging instance') {
       steps {
         timeout(time:5, unit:'MINUTES'){
-            input message: 'Approve the stagging deployment'
+            input message: 'Approve the staging deployment'
         }
-	echo "We are deploying the app in stagging env"
-    sh '''
-    docker container stop tomcatstaginginstance || true
-    docker container rm tomcatstaginginstance || true
-    docker container run -itd --name tomcatstaginginstance -p 8084:8080 localtomcatimg:$BUILD_NUMBER
-    sh '''
-	}
-	}
-   }
+        echo "We are deploying the app in staging env"
+        sh '''
+        docker container stop tomcatstaginginstance || true
+        docker container rm tomcatstaginginstance || true
+        docker pull localtomcatimg:$BUILD_NUMBER # Pull the image from the repository
+        docker container run -itd --name tomcatstaginginstance -p 8084:8080 localtomcatimg:$BUILD_NUMBER
+        '''
+      }
+    }
+  }
 }
