@@ -56,6 +56,7 @@
             <div class="row">
                 <div class="col-lg-4">
                     <div class="card">
+                        <img src="https://via.placeholder.com/300?text=Web+Development" class="card-img-top" alt="Web Development">
                         <div class="card-body">
                             <h3 class="card-title">Web Development Bootcamp</h3>
                             <p class="card-text">Learn the essentials of web development with our comprehensive bootcamp program.</p>
@@ -65,9 +66,20 @@
                 </div>
                 <div class="col-lg-4">
                     <div class="card">
+                        <img src="https://via.placeholder.com/300?text=Data+Science" class="card-img-top" alt="Data Science">
                         <div class="card-body">
                             <h3 class="card-title">Data Science Masterclass</h3>
                             <p class="card-text">Master the art of data science and analytics with our advanced masterclass.</p>
+                            <a href="#" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <img src="https://via.placeholder.com/300?text=DevOps" class="card-img-top" alt="DevOps">
+                        <div class="card-body">
+                            <h3 class="card-title">DevOps Fundamentals</h3>
+                            <p class="card-text">Explore the principles and practices of DevOps for seamless software delivery.</p>
                             <a href="#" class="btn btn-primary">Learn More</a>
                         </div>
                     </div>
@@ -127,6 +139,4 @@
     <!-- Bootstrap JS and jQuery (required for Bootstrap functionality) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/
