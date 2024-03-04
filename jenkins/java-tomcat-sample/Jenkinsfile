@@ -18,8 +18,8 @@ pipeline {
         sh '''
         original_pwd=$(pwd -P)
         cd jenkins/java-tomcat-sample
-        docker build -t localtomcatimg:$BUILD_NUMBER . -f Dockerfile
-        docker push localtomcatimg:$BUILD_NUMBER # Push the built image to a repository
+        docker build -t karnarajbanshi/localtomcatimg:$BUILD_NUMBER . -f Dockerfile
+        docker push karnarajbanshi/localtomcatimg:$BUILD_NUMBER # Push the built image to a repository
         cd $original_pwd
         '''
       }
@@ -30,8 +30,8 @@ pipeline {
         sh '''
         docker container stop tomcatlocalinstance || true
         docker container rm tomcatlocalinstance  || true
-        docker pull localtomcatimg:$BUILD_NUMBER # Pull the image from the repository
-        docker container run -itd --name tomcatlocalinstance -p 8083:8080 localtomcatimg:$BUILD_NUMBER
+        docker pull karnarajbanshi/localtomcatimg:$BUILD_NUMBER # Pull the image from the repository
+        docker container run -itd --name tomcatlocalinstance -p 8083:8080 karnarajbanshi/localtomcatimg:$BUILD_NUMBER
         '''
       }
     }
@@ -44,8 +44,8 @@ pipeline {
         sh '''
         docker container stop tomcatstaginginstance || true
         docker container rm tomcatstaginginstance || true
-        docker pull localtomcatimg:$BUILD_NUMBER # Pull the image from the repository
-        docker container run -itd --name tomcatstaginginstance -p 8084:8080 localtomcatimg:$BUILD_NUMBER
+        docker pull karnarajbanshi/localtomcatimg:$BUILD_NUMBER # Pull the image from the repository
+        docker container run -itd --name tomcatstaginginstance -p 8084:8080 karnarajbanshi/localtomcatimg:$BUILD_NUMBER
         '''
       }
     }
