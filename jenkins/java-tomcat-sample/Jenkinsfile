@@ -33,6 +33,15 @@ pipeline {
                 }
             }
         }
+
+        stage('Quality Gate status'){
+            steps{
+                script{
+                    waitForQualityGate abortPipeline: false, credentialsId: 'MySonarToken'
+                }
+            }
+        }
+                     
         stage('CreateTomcatImage') {
             steps {
                 echo "Building docker image"
