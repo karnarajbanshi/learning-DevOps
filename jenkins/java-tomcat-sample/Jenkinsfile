@@ -7,7 +7,7 @@ pipeline {
             }
             post {
                 success {
-                    echo "we are archiving the artifact"
+                    echo "Archiving the artifact"
                     archiveArtifacts artifacts: '**/*.war', followSymlinks: false
                 }
             }
@@ -24,10 +24,11 @@ pipeline {
         }
         stage('Sonar Analysis') {
             steps {
-                script {dir('jenkins/java-tomcat-sample') {
-                    // Execute Maven commands here
-                    withSonarQubeEnv(credentialsId: 'MySonarToken') {
-                        sh 'mvn clean package sonar:sonar'
+                script {
+                    dir('jenkins/java-tomcat-sample') {
+                        withSonarQubeEnv(credentialsId: 'MySonarToken') {
+                            sh 'mvn clean package sonar:sonar'
+                        }
                     }
                 }
             }
@@ -51,7 +52,7 @@ pipeline {
                 docker container stop tomcatlocalinstance || true
                 docker container rm tomcatlocalinstance  || true
                 docker pull karnarajbanshi/tomcatsonarimg:$BUILD_NUMBER # Pull the image from the repository
-                docker container run -itd --name tomcatlocalinstance -p 8083:8080 karnarajbanshi/tomcatsonarimg:$BUILD_NUMBER
+                docker container run -itd --name tomcatlocalinstance -p 8083:8080 karnarajbanshi/tomcatsonarimg:$BUILD_NUMBER || true
                 '''
             }
         }
@@ -65,7 +66,7 @@ pipeline {
                 docker container stop tomcatstaginginstance || true
                 docker container rm tomcatstaginginstance || true
                 docker pull karnarajbanshi/tomcatsonarimg:$BUILD_NUMBER # Pull the image from the repository
-                docker container run -itd --name tomcatstaginginstance -p 8084:8080 karnarajbanshi/tomcatsonarimg:$BUILD_NUMBER
+                docker container run -itd --name tomcatstaginginstance -p 8084:8080 karnarajbanshi/tomcatsonarimg:$BUILD_NUMBER || true
                 '''
             }
         }
