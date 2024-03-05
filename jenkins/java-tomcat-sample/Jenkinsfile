@@ -47,7 +47,7 @@ pipeline {
         }
         stage('Deploy in QA instance') {
             steps {
-                echo "We are deploying the app"
+                echo "We are deploying the tomcat app"
                 sh '''
                 docker container stop tomcatlocalinstance || true
                 docker container rm tomcatlocalinstance  || true
