@@ -24,7 +24,8 @@ pipeline {
         }
         stage('Sonar Analysis') {
             steps {
-                script {
+                script {dir('jenkins/java-tomcat-sample') {
+                    // Execute Maven commands here
                     withSonarQubeEnv(credentialsId: 'MySonarToken') {
                         sh 'mvn clean package sonar:sonar'
                     }
