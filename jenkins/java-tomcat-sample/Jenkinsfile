@@ -50,14 +50,18 @@ pipeline {
     }
 
     // Quality Gate Status stage (waitForQualityGate)
-    stage('Quality Gate Status') {
-      steps {
+
+   stage('Quality Gate Status') {
+    steps {
         script {
-          waitForQualityGate(timeout: 5, abortPipeline: false, credentialsId: 'MySonarToken')
-          // You can optionally add conditional logic here based on the quality gate status
-        }
+            timeout(time: 5, unit: 'MINUTES') {
+                waitForQualityGate abortPipeline: false, credentialsId: 'MySonarToken'
+            }
+            // You can optionally add conditional logic here based on the quality gate status
+          }
       }
-    }
+  }
+
 
     // Create Docker Image stage
     stage('Create Docker Image') {
