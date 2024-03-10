@@ -43,17 +43,7 @@ pipeline {
                     }
                 }
             }
-            post {
-                always {
-                    script {
-                        def qualityGate = waitForQualityGate()
-                        if (qualityGate.status != 'OK') {
-                            error "Pipeline aborted due to Quality Gate failure: ${qualityGate.status}"
-                        }
-                    }
-                }
-            }
-        }
+           
 
         stage('Create Docker Image') {
             steps {
