@@ -43,17 +43,19 @@ pipeline {
                     }
                 }
             }
-           
+        }
+
+        
 
         stage('Create Docker Image') {
             steps {
                 echo "Building docker image"
                 sh '''
-                  original_pwd=$(pwd -P)
-                  cd jenkins/java-tomcat-sample
-                  docker build -t ${DOCKER_IMAGE}:${BUILD_NUMBER} .
-                  docker push ${DOCKER_IMAGE}:${BUILD_NUMBER}
-                  cd $original_pwd
+                original_pwd=$(pwd -P)
+                cd jenkins/java-tomcat-sample
+                docker build -t ${DOCKER_IMAGE}:${BUILD_NUMBER} .
+                docker push ${DOCKER_IMAGE}:${BUILD_NUMBER} # Push the built image to a repository
+                cd $original_pwd
                 '''
             }
         }
@@ -62,23 +64,23 @@ pipeline {
             steps {
                 echo "Deploying the tomcat app in QA"
                 sh '''
-                  docker pull ${DOCKER_IMAGE}:${BUILD_NUMBER}
-                  docker service update --image ${DOCKER_IMAGE}:${BUILD_NUMBER} ${SERVICE_NAME_QA} || 
-                  docker service create --name ${SERVICE_NAME_QA} --network ${DOCKER_NETWORK} -p 8083:8080 --replicas 1 ${DOCKER_IMAGE}:${BUILD_NUMBER}
+                docker pull ${DOCKER_IMAGE}:${BUILD_NUMBER}
+                docker service update --image ${DOCKER_IMAGE}:${BUILD_NUMBER} ${SERVICE_NAME_QA} || 
+                docker service create --name ${SERVICE_NAME_QA} --network ${DOCKER_NETWORK} -p 8083:8080 --replicas 1 ${DOCKER_IMAGE}:${BUILD_NUMBER}
                 '''
             }
         }
 
-        stage('Deploy in Staging Instance (Approval)') {
+        stage('Deploy in Staging Instance') {
             steps {
                 timeout(time: 5, unit: 'MINUTES') {
                     input message: 'Approve the staging deployment'
                 }
                 echo "Deploying the app in staging"
                 sh '''
-                  docker pull ${DOCKER_IMAGE}:${BUILD_NUMBER}
-                  docker service update --image ${DOCKER_IMAGE}:${BUILD_NUMBER} ${SERVICE_NAME_STAGING} || 
-                  docker service create --name ${SERVICE_NAME_STAGING} --network ${DOCKER_NETWORK} -p 8084:8080 --replicas 1 ${DOCKER_IMAGE}:${BUILD_NUMBER}
+                docker pull ${DOCKER_IMAGE}:${BUILD_NUMBER}
+                docker service update --image ${DOCKER_IMAGE}:${BUILD_NUMBER} ${SERVICE_NAME_STAGING} || 
+                docker service create --name ${SERVICE_NAME_STAGING} --network ${DOCKER_NETWORK} -p 8084:8080 --replicas 1 ${DOCKER_IMAGE}:${BUILD_NUMBER}
                 '''
             }
         }
