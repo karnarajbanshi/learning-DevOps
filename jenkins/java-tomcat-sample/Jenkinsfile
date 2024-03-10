@@ -54,10 +54,8 @@ pipeline {
    stage('Quality Gate Status') {
     steps {
         script {
-            timeout(time: 5, unit: 'MINUTES') {
-                waitForQualityGate abortPipeline: false, credentialsId: 'MySonarToken'
-            }
-            // You can optionally add conditional logic here based on the quality gate status
+                waitForQualityGate abortPipeline: false, credentialsId: 'MySonarTokenNew'
+        
           }
       }
   }
